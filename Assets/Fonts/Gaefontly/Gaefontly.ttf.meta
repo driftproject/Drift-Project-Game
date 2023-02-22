@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 6af1648f06ad19a4d91de10b54be813e
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Gaefontly
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 603c12a808ddf6447a410c4ba4852e4b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
