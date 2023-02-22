@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
 
     float TimeLeftForDrift;
 
-    CarController m_PlayerCar;
+    public CarController m_PlayerCar;
 
     void CreateCar()
     {

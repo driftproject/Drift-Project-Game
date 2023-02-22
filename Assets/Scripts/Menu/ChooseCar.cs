@@ -20,8 +20,6 @@ public class ChooseCar : MonoBehaviour
             PrevCar();
         else if (Input.GetKeyDown(KeyCode.Return))
             SceneManager.LoadScene("ChooseMap");
-
-        transform.Rotate(0, 1, 0);
     }
 
     public void NextCar()

@@ -2,11 +2,24 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine;
 
+[System.Serializable]
+public class TokenJson
+{
+    public string access_token;
+    public string token_type;
+}
+
 public class NetworkController : MonoBehaviour
 {
     public static NetworkController instance;
 
     public string response;
+
+    public string GetToken()
+    {
+        TokenJson json = JsonUtility.FromJson<TokenJson>(response);
+        return json.access_token;
+    }
 
     public void GetRequest(string url)
     {
@@ -22,6 +35,8 @@ public class NetworkController : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
+            if (PlayerPrefs.HasKey("APItoken"))
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString("APItoken"));
             yield return webRequest.SendWebRequest();
 
             string[] pages = url.Split('/');
@@ -54,6 +69,10 @@ public class NetworkController : MonoBehaviour
         using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
             yield return www.SendWebRequest();
+            response = www.downloadHandler.text;
         }
+
+        if (username != null && password != null)
+            PlayerPrefs.SetString("APItoken", GetToken());
     }
 }

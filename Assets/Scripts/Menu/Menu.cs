@@ -37,6 +37,8 @@ public class Menu : MonoBehaviour
 
     public void PlayButton()
     {
-        NetworkController.instance.PostRequest("url", "user", "pass");
+        NetworkController network_controller = FindObjectOfType<NetworkController>();
+        network_controller.PostRequest("https://8499-176-62-183-85.eu.ngrok.io/player/login", usernameField.text, passwordField.text);
+        //network_controller.GetRequest("https://8499-176-62-183-85.eu.ngrok.io/rating/all");
     }
 }

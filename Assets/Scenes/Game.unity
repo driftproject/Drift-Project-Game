@@ -1411,6 +1411,7 @@ MonoBehaviour:
   - pos: {x: 0, y: 0, z: 0}
     prefab: {fileID: 1518815422270265147, guid: 37d50b6dd11b63f4db46895bf86954c7,
       type: 3}
+  m_PlayerCar: {fileID: 0}
 --- !u!4 &1717358259
 Transform:
   m_ObjectHideFlags: 0
@@ -1785,9 +1786,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   CameraHolder: {fileID: 4845047480770371}
-  SetPositionSpeed: 10
-  VelocityMultiplier: 0.05
-  MinDistanceForRotation: 0.01
+  SetPositionSpeed: 0.2
+  VelocityMultiplier: 5
+  MinDistanceForRotation: 5
   SetRotationSpeed: 5
 --- !u!124 &124995858699182051
 Behaviour:
