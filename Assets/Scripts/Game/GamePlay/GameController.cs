@@ -23,6 +23,9 @@ public class GameController : MonoBehaviour
     public float DriftScore = 0;
     public float CurrentDriftScore = 0;
 
+    [HideInInspector] public int nextCheckpointIndex = 0;
+    public int checkpointsCount;
+
     public GameObject[] CarPrefabs;
     public Map[] MapPrefabs;
 
@@ -40,6 +43,20 @@ public class GameController : MonoBehaviour
         Instantiate(MapPrefabs[PlayerPrefs.GetInt("CurrentMap")].prefab, MapPrefabs[PlayerPrefs.GetInt("CurrentMap")].pos, Quaternion.identity);
     }
 
+    public void RaceCheckpoint()
+    {
+        nextCheckpointIndex++;
+        if (checkpointsCount == nextCheckpointIndex-1)
+        {
+            EndRace();
+        }
+    }
+
+    void EndRace()
+    {
+        //End of race
+    }
+
     void Awake()
     {
         Instance = this;
@@ -50,6 +67,8 @@ public class GameController : MonoBehaviour
 
         m_PlayerCar.GetComponent<UserControl>().enabled = true;
         m_PlayerCar.GetComponent<AudioListener>().enabled = true;
+
+        nextCheckpointIndex = 0;
     }
 
     private void Update()
