@@ -22,7 +22,7 @@ public class ChooseCar : MonoBehaviour
             SceneManager.LoadScene("ChooseMap");
     }
 
-    void NextCar()
+    public void NextCar()
     {
         index++;
         if (index >= cars.Length)
@@ -38,7 +38,7 @@ public class ChooseCar : MonoBehaviour
         PlayerPrefs.SetInt("CurrentCar", index);
     }
 
-    void PrevCar()
+    public void PrevCar()
     {
         index--;
         if (index <= -1)

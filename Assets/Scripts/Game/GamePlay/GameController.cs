@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
+using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Map
 {
     public Vector3 pos;
     public GameObject prefab;
+    public int checkpointsCount;
 }
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
     public static CarController PlayerCar { get { return Instance.m_PlayerCar; } }
-    public static bool RaceIsStarted { get { return true; } }
-    public static bool RaceIsEnded { get { return false; } }
+    public static bool RaceIsStarted;
+    public static bool RaceIsEnded;
 
     public float MinSlipForScore = 0.6f;
     public float MaxTimeForDrift = 2;
@@ -24,14 +26,28 @@ public class GameController : MonoBehaviour
     public float CurrentDriftScore = 0;
 
     [HideInInspector] public int nextCheckpointIndex = 0;
-    public int checkpointsCount;
 
     public GameObject[] CarPrefabs;
     public Map[] MapPrefabs;
 
-    float TimeLeftForDrift;
-
     public CarController m_PlayerCar;
+
+    float TimeLeftForDrift;
+    int checkpointsCount;
+
+    [Header("End of race")]
+    public GameObject EndracePanel;
+    public Text EndraceTimeText;
+
+    public void MenuButton()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void RestartButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
     void CreateCar()
     {
@@ -46,7 +62,8 @@ public class GameController : MonoBehaviour
     public void RaceCheckpoint()
     {
         nextCheckpointIndex++;
-        if (checkpointsCount == nextCheckpointIndex-1)
+
+        if (checkpointsCount == nextCheckpointIndex)
         {
             EndRace();
         }
@@ -54,7 +71,13 @@ public class GameController : MonoBehaviour
 
     void EndRace()
     {
-        //End of race
+        Pause.pause = true;
+        RaceIsEnded = true;
+        EndracePanel.SetActive(true);
+
+        TimeManager tm = TimeManager.instance;
+        EndraceTimeText.text = string.Format("{0:00}.{1:00}.{2}", Mathf.Floor(tm.timer / 60), Mathf.Floor(tm.timer % 60), Mathf.Floor(tm.timer % 1 * 100));
+        GetComponent<NetworkController>().PostCreateRatingRequest(GetComponent<NetworkController>().URL + "/rating/create", (int)TimeManager.instance.timer, (int)(DriftScore + (CurrentDriftScore * DriftScoreX)));
     }
 
     void Awake()
@@ -69,6 +92,14 @@ public class GameController : MonoBehaviour
         m_PlayerCar.GetComponent<AudioListener>().enabled = true;
 
         nextCheckpointIndex = 0;
+
+        RaceIsStarted = true;
+    }
+
+    private void Start()
+    {
+        EndracePanel.SetActive(false);
+        checkpointsCount = MapPrefabs[PlayerPrefs.GetInt("CurrentMap")].checkpointsCount;
     }
 
     private void Update()
@@ -98,12 +129,6 @@ public class GameController : MonoBehaviour
                 TimeFromDriftLastX = 0;
                 CurrentDriftScore = 0;
                 DriftScoreX = 1;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                m_PlayerCar.transform.position = new Vector3(0, 0, 0);
-                m_PlayerCar.GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
         }
     }

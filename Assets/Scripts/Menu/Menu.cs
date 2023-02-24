@@ -32,13 +32,15 @@ public class Menu : MonoBehaviour
 
     public void LogInPanelButton()
     {
-        loginPanel.SetActive(true);
+        if (PlayerPrefs.HasKey("APItoken"))
+            SceneManager.LoadScene("ChooseCar");
+        else
+            loginPanel.SetActive(true);
     }
 
     public void PlayButton()
     {
-        NetworkController network_controller = FindObjectOfType<NetworkController>();
-        network_controller.PostRequest("https://8499-176-62-183-85.eu.ngrok.io/player/login", usernameField.text, passwordField.text);
-        //network_controller.GetRequest("https://8499-176-62-183-85.eu.ngrok.io/rating/all");
+        GetComponent<NetworkController>().PostLoginRequest(GetComponent<NetworkController>().URL + "/player/login", usernameField.text, passwordField.text);
+        SceneManager.LoadScene("ChooseCar");
     }
 }

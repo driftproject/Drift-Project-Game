@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class NetworkController : MonoBehaviour
 
     public string response;
 
+    public string URL;
+
     public string GetToken()
     {
         TokenJson json = JsonUtility.FromJson<TokenJson>(response);
@@ -26,9 +29,14 @@ public class NetworkController : MonoBehaviour
         StartCoroutine(GetRequestIE(url));
     }
 
-    public void PostRequest(string url, string username, string password)
+    public void PostLoginRequest(string url, string username, string password)
     {
-        StartCoroutine(PostRequestIE(url, username, password));
+        StartCoroutine(PostLoginRequestIE(url, username, password));
+    }
+
+    public void PostCreateRatingRequest(string url, int time, int point)
+    {
+        StartCoroutine(PostCreateRatingRequestIE(url, time, point));
     }
 
     IEnumerator GetRequestIE(string url)
@@ -60,13 +68,9 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    IEnumerator PostRequestIE(string url, string username, string password)
+    IEnumerator PostLoginRequestIE(string url, string username, string password)
     {
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddField("password", password);
-
-        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        using (UnityWebRequest www = UnityWebRequest.Post($"{url}?username={username}&password={password}", new WWWForm()))
         {
             yield return www.SendWebRequest();
             response = www.downloadHandler.text;
@@ -74,5 +78,19 @@ public class NetworkController : MonoBehaviour
 
         if (username != null && password != null)
             PlayerPrefs.SetString("APItoken", GetToken());
+        print(PlayerPrefs.GetString("APItoken"));
+    }
+
+    IEnumerator PostCreateRatingRequestIE(string url, int time, int points)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Post($"{url}?points={points}&time={time}", new WWWForm()))
+        {
+            www.SetRequestHeader("Authorization", $"Bearer {PlayerPrefs.GetString("APItoken")}");
+
+            yield return www.SendWebRequest();
+            response = www.downloadHandler.text;
+        }
+
+        print(response);
     }
 }

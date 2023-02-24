@@ -35,7 +35,8 @@ public class Pause : MonoBehaviour
 
     public void Resume()
     {
-        pause = false;
+        if (GameController.RaceIsStarted == true && GameController.RaceIsEnded == false)
+            pause = false;
     }
 
     public void Menu()
